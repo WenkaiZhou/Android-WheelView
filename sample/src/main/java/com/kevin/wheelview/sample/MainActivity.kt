@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.kevin.wheelview.sample.clock.IOSClockActivity
+import com.kevin.wheelview.sample.province.ProvinceSelectorDialog
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,5 +34,12 @@ class MainActivity : AppCompatActivity() {
      */
     fun onSystemClockClick(view: View) {
         startActivity(Intent(this, IOSClockActivity::class.java))
+    }
+
+    /**
+     * 省市区选择
+     */
+    fun onProvinceClick(view: View) {
+        ProvinceSelectorDialog.getInstance().show(this)
     }
 }
