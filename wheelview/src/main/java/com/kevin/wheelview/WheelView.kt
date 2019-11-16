@@ -42,6 +42,7 @@ import androidx.annotation.IntDef
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import java.util.Locale
+import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -774,13 +775,12 @@ open class WheelView @JvmOverloads constructor(
         paint.textSize = textSize
         for (i in dataItems.indices) {
             val textWidth = paint.measureText(getDataText(dataItems[i])).toInt()
-            maxTextWidth = Math.max(textWidth, maxTextWidth)
+            maxTextWidth = textWidth.coerceAtLeast(maxTextWidth)
         }
 
         this.fontMetrics = paint.fontMetrics
         // itemHeight实际等于字体高度+一个行间距
-        this.itemHeight =
-            (this.fontMetrics!!.bottom - this.fontMetrics!!.top + lineSpacing).toInt()
+        this.itemHeight = (fontMetrics!!.bottom - fontMetrics!!.top + lineSpacing).toInt()
     }
 
     /**
@@ -796,22 +796,20 @@ open class WheelView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         // Line Space算在了itemHeight中
-        val height: Int
-        if (isCurved) {
-            height =
-                (this.itemHeight * visibleItems * 2 / Math.PI + paddingTop.toDouble() + paddingBottom.toDouble()).toInt()
+        val height: Int = if (isCurved) {
+            (this.itemHeight * visibleItems * 2 / Math.PI + paddingTop.toDouble() + paddingBottom.toDouble()).toInt()
         } else {
-            height = this.itemHeight * visibleItems + paddingTop + paddingBottom
+            this.itemHeight * visibleItems + paddingTop + paddingBottom
         }
         var width =
             (maxTextWidth.toFloat() + paddingLeft.toFloat() + paddingRight.toFloat() + textBoundaryMargin * 2).toInt()
         if (isCurved) {
-            val towardRange = (Math.sin(Math.PI / 48) * height).toInt()
+            val towardRange = (sin(Math.PI / 48) * height).toInt()
             width += towardRange
         }
         setMeasuredDimension(
-            View.resolveSizeAndState(width, widthMeasureSpec, 0),
-            View.resolveSizeAndState(height, heightMeasureSpec, 0)
+            resolveSizeAndState(width, widthMeasureSpec, 0),
+            resolveSizeAndState(height, heightMeasureSpec, 0)
         )
     }
 
@@ -821,8 +819,8 @@ open class WheelView @JvmOverloads constructor(
         drawRect.set(paddingLeft, paddingTop, width - paddingRight, height - paddingBottom)
         centerX = drawRect.centerX()
         this.centerY = drawRect.centerY()
-        selectedItemTopLimit = this.centerY - itemHeight / 2
-        selectedItemBottomLimit = this.centerY + this.itemHeight / 2
+        selectedItemTopLimit = centerY - itemHeight / 2
+        selectedItemBottomLimit = centerY + itemHeight / 2
         clipLeft = paddingLeft
         clipTop = paddingTop
         clipRight = width - paddingRight
@@ -839,14 +837,13 @@ open class WheelView @JvmOverloads constructor(
     private fun calculateDrawStart() {
         startX = when (textAlign) {
             TEXT_ALIGN_LEFT -> (paddingLeft + textBoundaryMargin).toInt()
-            TEXT_ALIGN_RIGHT -> (width.toFloat() - paddingRight.toFloat() - textBoundaryMargin).toInt()
-            TEXT_ALIGN_CENTER -> width / 2
+            TEXT_ALIGN_RIGHT -> (width - paddingRight - textBoundaryMargin).toInt()
             else -> width / 2
         }
 
         // 文字中心距离baseline的距离
         centerToBaselineY =
-            (this.fontMetrics!!.ascent + (this.fontMetrics!!.descent - this.fontMetrics!!.ascent) / 2).toInt()
+            (fontMetrics!!.ascent + (fontMetrics!!.descent - fontMetrics!!.ascent) / 2).toInt()
     }
 
     /**
@@ -876,16 +873,20 @@ open class WheelView @JvmOverloads constructor(
         val minIndex: Int
         // 计算的最大index
         val maxIndex: Int
-        if (scrolledOffset < 0) {
-            // 小于0
-            minIndex = scrolledItem - halfItem - 1
-            maxIndex = scrolledItem + halfItem
-        } else if (scrolledOffset > 0) {
-            minIndex = scrolledItem - halfItem
-            maxIndex = scrolledItem + halfItem + 1
-        } else {
-            minIndex = scrolledItem - halfItem
-            maxIndex = scrolledItem + halfItem
+        when {
+            scrolledOffset < 0 -> {
+                // 小于0
+                minIndex = scrolledItem - halfItem - 1
+                maxIndex = scrolledItem + halfItem
+            }
+            scrolledOffset > 0 -> {
+                minIndex = scrolledItem - halfItem
+                maxIndex = scrolledItem + halfItem + 1
+            }
+            else -> {
+                minIndex = scrolledItem - halfItem
+                maxIndex = scrolledItem + halfItem
+            }
         }
 
         // 绘制item
@@ -947,9 +948,9 @@ open class WheelView @JvmOverloads constructor(
             } else {
                 // 边界处理 超过边界直接按照DIVIDER_TYPE_FILL类型处理
                 val startX =
-                    (centerX.toFloat() - (maxTextWidth / 2).toFloat() - this.dividerPaddingForWrap).toInt()
+                    (centerX.toFloat() - (maxTextWidth / 2).toFloat() - dividerPaddingForWrap).toInt()
                 val stopX =
-                    (this.centerX.toFloat() + (maxTextWidth / 2).toFloat() + this.dividerPaddingForWrap).toInt()
+                    (this.centerX.toFloat() + (maxTextWidth / 2).toFloat() + dividerPaddingForWrap).toInt()
 
                 val wrapStartX = if (startX < clipLeft) clipLeft else startX
                 val wrapStopX = if (stopX > clipRight) clipRight else stopX
@@ -991,7 +992,7 @@ open class WheelView @JvmOverloads constructor(
         val centerToBaselineY =
             if (isAutoFitTextSize) remeasureTextSize(text) else centerToBaselineY
 
-        if (Math.abs(item2CenterOffsetY) <= 0) {
+        if (abs(item2CenterOffsetY) <= 0) {
             // 绘制选中的条目
             paint.color = selectedItemTextColor
             clipAndDraw2DText(
@@ -1112,7 +1113,7 @@ open class WheelView @JvmOverloads constructor(
             drawWidth = drawWidth * 9f / 10f
             textMargin = drawWidth / 10f
         } else {
-            drawWidth = drawWidth - textMargin
+            drawWidth -= textMargin
         }
         if (drawWidth <= 0) {
             return centerToBaselineY
@@ -1168,11 +1169,10 @@ open class WheelView @JvmOverloads constructor(
         // 滚轮的半径
         val radius = (height - paddingTop - paddingBottom) / 2
         // index 的 item 距离中间项的偏移
-        val item2CenterOffsetY =
-            (index - scrollOffsetY / this.itemHeight) * this.itemHeight - scrolledOffset
+        val item2CenterOffsetY = (index - scrollOffsetY / itemHeight) * itemHeight - scrolledOffset
 
         // 当滑动的角度和y轴垂直时（此时文字已经显示为一条线），不绘制文字
-        if (Math.abs(item2CenterOffsetY) > radius * Math.PI / 2) {
+        if (abs(item2CenterOffsetY) > radius * Math.PI / 2) {
             return
         }
 
@@ -1191,7 +1191,7 @@ open class WheelView @JvmOverloads constructor(
         // 重新测量字体宽度和基线偏移
         val centerToBaselineY =
             if (isAutoFitTextSize) remeasureTextSize(text) else centerToBaselineY
-        if (Math.abs(item2CenterOffsetY) <= 0) {
+        if (abs(item2CenterOffsetY) <= 0) {
             // 绘制选中的条目
             paint.color = selectedItemTextColor
             paint.alpha = 255
@@ -1205,7 +1205,7 @@ open class WheelView @JvmOverloads constructor(
                 translateZ,
                 centerToBaselineY
             )
-        } else if (item2CenterOffsetY > 0 && item2CenterOffsetY < this.itemHeight) {
+        } else if (item2CenterOffsetY in 1 until itemHeight) {
             // 绘制与下边界交汇的条目
             paint.color = selectedItemTextColor
             paint.alpha = 255
@@ -1238,7 +1238,7 @@ open class WheelView @JvmOverloads constructor(
                 reCenterToBaselineY
             )
             paint.textSize = textSize
-        } else if (item2CenterOffsetY < 0 && item2CenterOffsetY > -this.itemHeight) {
+        } else if (item2CenterOffsetY < 0 && item2CenterOffsetY > -itemHeight) {
             // 绘制与上边界交汇的条目
             paint.color = selectedItemTextColor
             paint.alpha = 255
@@ -1399,7 +1399,7 @@ open class WheelView @JvmOverloads constructor(
             }
             itemText = getDataText(dataItems[i])
         } else {
-            if (index >= 0 && index < dataSize) {
+            if (index in 0 until dataSize) {
                 itemText = getDataText(dataItems[index])
             }
         }
@@ -1455,7 +1455,7 @@ open class WheelView @JvmOverloads constructor(
                 if (onWheelChangedListener != null) {
                     onWheelChangedListener!!.onWheelScrollStateChanged(SCROLL_STATE_DRAGGING)
                 }
-                if (Math.abs(deltaY) >= 1) {
+                if (abs(deltaY) >= 1) {
                     // deltaY 上滑为正，下滑为负
                     doScroll((-deltaY).toInt())
                     lastTouchY = moveY
@@ -1467,7 +1467,7 @@ open class WheelView @JvmOverloads constructor(
                 isForceFinishScroll = false
                 velocityTracker!!.computeCurrentVelocity(1000, maxFlingVelocity.toFloat())
                 val velocityY = velocityTracker!!.yVelocity
-                if (Math.abs(velocityY) > minFlingVelocity) {
+                if (abs(velocityY) > minFlingVelocity) {
                     // 快速滑动
                     overScroller.forceFinished(true)
                     isFlingScroll = true
@@ -1622,7 +1622,7 @@ open class WheelView @JvmOverloads constructor(
      * @return 偏移量
      */
     private fun calculateDistanceToEndPoint(remainder: Int): Int {
-        return if (Math.abs(remainder) > this.itemHeight / 2) {
+        return if (abs(remainder) > this.itemHeight / 2) {
             if (scrollOffsetY < 0) {
                 -this.itemHeight - remainder
             } else {
@@ -1918,7 +1918,7 @@ open class WheelView @JvmOverloads constructor(
         }
         // 强制滚动完成
         forceFinishScroll()
-        paint.setTypeface(typeface)
+        paint.typeface = typeface
         calculateTextSize()
         calculateDrawStart()
         // 字体大小变化，偏移距离也变化了
@@ -1999,7 +1999,7 @@ open class WheelView @JvmOverloads constructor(
      * @return 调整后的可见条目数
      */
     private fun adjustVisibleItems(visibleItems: Int): Int {
-        return Math.abs(visibleItems / 2 * 2 + 1) // 当传入的值为偶数时,换算成奇数;
+        return abs(visibleItems / 2 * 2 + 1) // 当传入的值为偶数时,换算成奇数;
     }
 
     /**
