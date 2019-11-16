@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="WheelView">
+        <!--文字大小-->
+        <attr name="wv_textSize" format="dimension" />
+        <!--是否自适应文字大小以完全显示过长的文字-->
+        <attr name="wv_autoFitTextSize" format="boolean" />
+        <!--文字对齐方式-->
+        <attr name="wv_textAlign" format="enum">
+            <enum name="left" value="0" />
+            <enum name="center" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+        <!--文字距离边界的外边距-->
+        <attr name="wv_textBoundaryMargin" format="dimension" />
+        <!--未选中文字颜色-->
+        <attr name="wv_normalItemTextColor" format="color" />
+        <!--被选中的文字颜色-->
+        <attr name="wv_selectedItemTextColor" format="color" />
+        <!--行间距-->
+        <attr name="wv_lineSpacing" format="dimension" />
+        <!--数据为Integer类型时是否需要转换-->
+        <attr name="wv_integerNeedFormat" format="boolean" />
+        <!--Integer类型转换格式-->
+        <attr name="wv_integerFormat" format="string" />
+
+        <!--可见item数-->
+        <attr name="wv_visibleItems" format="integer" />
+        <!--当前选中下标-->
+        <attr name="wv_selectedItemPosition" format="integer" />
+        <!--是否循环滚动-->
+        <attr name="wv_cyclic" format="boolean" />
+
+        <!--是否显示分割线-->
+        <attr name="wv_showDivider" format="boolean" />
+        <!--分割线类型-->
+        <attr name="wv_dividerType" format="enum">
+            <enum name="fill" value="0" />
+            <enum name="wrap" value="1" />
+        </attr>
+        <!--分割线颜色-->
+        <attr name="wv_dividerColor" format="color" />
+        <!--分割线高度-->
+        <attr name="wv_dividerHeight" format="dimension" />
+        <!--wrap类型下分割线内边距-->
+        <attr name="wv_dividerPaddingForWrap" format="dimension" />
+
+        <!--是否是弯曲（3D）效果-->
+        <attr name="wv_curved" format="boolean" />
+        <!--弯曲（3D）效果左右圆弧偏移效果方向 可向指定方向偏移-->
+        <attr name="wv_curvedArcDirection" format="enum">
+            <enum name="left" value="0" />
+            <enum name="center" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+        <!--弯曲（3D）效果左右圆弧偏移效果方向系数 偏移系数-->
+        <attr name="wv_curvedArcDirectionFactor" format="float" />
+        <!--弯曲（3D）效果选中后折射的偏移 与字体大小的比值，1为不偏移 越小偏移越明显-->
+        <attr name="wv_curvedRefractRatio" format="float" />
+
+        <!--是否绘制选中区域-->
+        <attr name="wv_drawSelectedRect" format="boolean" />
+        <!--选中区域颜色-->
+        <attr name="wv_selectedRectColor" format="color" />
+    </declare-styleable>
+</resources>
