@@ -2239,16 +2239,16 @@ open class WheelView @JvmOverloads constructor(
             to = 1.0
         ) curvedArcDirectionFactor: Float
     ) {
-        var curvedArcDirectionFactor = curvedArcDirectionFactor
-        if (this.curvedArcDirectionFactor == curvedArcDirectionFactor) {
+        var tempcurvedArcDirectionFactor = curvedArcDirectionFactor
+        if (this.curvedArcDirectionFactor == tempcurvedArcDirectionFactor) {
             return
         }
         if (curvedArcDirectionFactor < 0) {
-            curvedArcDirectionFactor = 0f
+            tempcurvedArcDirectionFactor = 0f
         } else if (curvedArcDirectionFactor > 1) {
-            curvedArcDirectionFactor = 1f
+            tempcurvedArcDirectionFactor = 1f
         }
-        this.curvedArcDirectionFactor = curvedArcDirectionFactor
+        this.curvedArcDirectionFactor = tempcurvedArcDirectionFactor
         invalidate()
     }
 
@@ -2405,9 +2405,9 @@ open class WheelView @JvmOverloads constructor(
      */
     private class SoundHelper {
 
-        private var mSoundPool: SoundPool? = null
+        private val soundPool: SoundPool
 
-        private var mSoundId: Int = 0
+        private var soundId: Int = 0
 
         /**
          * 音频播放音量 range 0.0-1.0
@@ -2415,10 +2415,11 @@ open class WheelView @JvmOverloads constructor(
         var playVolume: Float = 0.toFloat()
 
         init {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mSoundPool = SoundPool.Builder().build()
+            soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                SoundPool.Builder().build()
             } else {
-                mSoundPool = SoundPool(1, AudioManager.STREAM_SYSTEM, 1)
+                @Suppress("DEPRECATION")
+                SoundPool(1, AudioManager.STREAM_SYSTEM, 1)
             }
         }
 
@@ -2429,17 +2430,15 @@ open class WheelView @JvmOverloads constructor(
          * @param resId   音频资源 [RawRes]
          */
         fun load(context: Context, @RawRes resId: Int) {
-            if (mSoundPool != null) {
-                mSoundId = mSoundPool!!.load(context, resId, 1)
-            }
+            soundId = soundPool.load(context, resId, 1)
         }
 
         /**
          * 播放声音效果
          */
         fun playSoundEffect() {
-            if (mSoundPool != null && mSoundId != 0) {
-                mSoundPool!!.play(mSoundId, playVolume, playVolume, 1, 0, 1f)
+            if (soundId != 0) {
+                soundPool.play(soundId, playVolume, playVolume, 1, 0, 1f)
             }
         }
 
@@ -2447,10 +2446,7 @@ open class WheelView @JvmOverloads constructor(
          * 释放SoundPool
          */
         fun release() {
-            if (mSoundPool != null) {
-                mSoundPool!!.release()
-                mSoundPool = null
-            }
+            soundPool.release()
         }
     }
 
