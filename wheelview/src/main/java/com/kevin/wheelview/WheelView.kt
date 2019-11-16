@@ -2318,27 +2318,6 @@ open class WheelView @JvmOverloads constructor(
     }
 
     /**
-     * 自定义文字对齐方式注解
-     */
-    @IntDef(TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, TEXT_ALIGN_RIGHT)
-    @Retention(AnnotationRetention.SOURCE)
-    annotation class TextAlign
-
-    /**
-     * 自定义左右圆弧效果方向注解
-     */
-    @IntDef(CURVED_ARC_DIRECTION_LEFT, CURVED_ARC_DIRECTION_CENTER, CURVED_ARC_DIRECTION_RIGHT)
-    @Retention(AnnotationRetention.SOURCE)
-    annotation class CurvedArcDirection
-
-    /**
-     * 自定义分割线类型注解
-     */
-    @IntDef(DIVIDER_TYPE_FILL, DIVIDER_TYPE_WRAP)
-    @Retention(AnnotationRetention.SOURCE)
-    annotation class DividerType
-
-    /**
      * 条目选中监听器
      */
     interface OnItemSelectedListener {
@@ -2542,3 +2521,28 @@ open class WheelView @JvmOverloads constructor(
         }
     }
 }
+
+/**
+ * 文字对齐方式注解
+ */
+@IntDef(WheelView.TEXT_ALIGN_LEFT, WheelView.TEXT_ALIGN_CENTER, WheelView.TEXT_ALIGN_RIGHT)
+@Retention(AnnotationRetention.SOURCE)
+annotation class TextAlign
+
+/**
+ * 左右圆弧效果方向注解
+ */
+@IntDef(
+    WheelView.CURVED_ARC_DIRECTION_LEFT,
+    WheelView.CURVED_ARC_DIRECTION_CENTER,
+    WheelView.CURVED_ARC_DIRECTION_RIGHT
+)
+@Retention(AnnotationRetention.SOURCE)
+annotation class CurvedArcDirection
+
+/**
+ * 分割线类型注解
+ */
+@IntDef(WheelView.DIVIDER_TYPE_FILL, WheelView.DIVIDER_TYPE_WRAP)
+@Retention(AnnotationRetention.SOURCE)
+annotation class DividerType
