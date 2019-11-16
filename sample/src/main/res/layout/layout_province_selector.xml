@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2019 Kevin zhou
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+    *
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+    *
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data class=".province.ProvinceSelectorBinding">
+
+        <variable
+            name="view"
+            type="com.kevin.wheelview.sample.province.ProvinceSelectorDialog" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:gravity="center"
+            android:onClick="@{view::onCancelClick}"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="取消"
+            android:textColor="#666666"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/title_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_cancel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_cancel"
+            tools:text="选择区域" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:gravity="center"
+            android:onClick="@{view::onConfirmClick}"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="确定"
+            android:textColor="#5183FF"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_cancel"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_cancel" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:background="#E1E1E1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title_view" />
+
+        <com.kevin.wheelview.WheelView
+            android:id="@+id/province_wheel_view"
+            android:layout_width="0dp"
+            android:layout_height="230dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/city_wheel_view"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:wv_autoFitTextSize="true"
+            app:wv_curvedArcDirection="left"
+            app:wv_cyclic="false"
+            app:wv_dividerColor="#EAEAEA"
+            app:wv_dividerHeight="1px"
+            app:wv_lineSpacing="4dp"
+            app:wv_normalItemTextColor="#BEBEBE"
+            app:wv_selectedItemPosition="0"
+            app:wv_selectedItemTextColor="#000000"
+            app:wv_showDivider="true"
+            app:wv_textSize="20sp"
+            app:wv_visibleItems="9" />
+
+        <com.kevin.wheelview.WheelView
+            android:id="@+id/city_wheel_view"
+            android:layout_width="0dp"
+            android:layout_height="230dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/province_wheel_view"
+            app:layout_constraintRight_toLeftOf="@+id/area_wheel_view"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:wv_autoFitTextSize="true"
+            app:wv_cyclic="false"
+            app:wv_dividerColor="#EAEAEA"
+            app:wv_dividerHeight="1px"
+            app:wv_lineSpacing="4dp"
+            app:wv_normalItemTextColor="#BEBEBE"
+            app:wv_selectedItemPosition="0"
+            app:wv_selectedItemTextColor="#000000"
+            app:wv_showDivider="true"
+            app:wv_textSize="20sp"
+            app:wv_visibleItems="9" />
+
+        <com.kevin.wheelview.WheelView
+            android:id="@+id/area_wheel_view"
+            android:layout_width="0dp"
+            android:layout_height="230dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/city_wheel_view"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:wv_autoFitTextSize="true"
+            app:wv_curvedArcDirection="right"
+            app:wv_cyclic="false"
+            app:wv_dividerColor="#EAEAEA"
+            app:wv_dividerHeight="1px"
+            app:wv_lineSpacing="4dp"
+            app:wv_normalItemTextColor="#BEBEBE"
+            app:wv_selectedItemPosition="0"
+            app:wv_selectedItemTextColor="#000000"
+            app:wv_showDivider="true"
+            app:wv_textSize="20sp"
+            app:wv_visibleItems="9" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -17,11 +17,28 @@ package com.kevin.wheelview.sample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.kevin.wheelview.WheelView
+import com.kevin.wheelview.sample.province.ProvinceSelectorDialog
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        val list = mutableListOf(1, 212, 33, 4231435, 53, 6431, 37)
+        wheel_view.setDataItems(list)
+        wheel_view.setCyclic(true)
+        wheel_view.setTextAlign(WheelView.TEXT_ALIGN_LEFT)
+        wheel_view.setCurvedRefractRatio(1.0f)
+        wheel_view.setSoundEffect(true)
+
+        ProvinceSelectorDialog.getInstance().show(this)
+
+
+
+
     }
 }
