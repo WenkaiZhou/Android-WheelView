@@ -8,6 +8,8 @@
 
 ## 示例图片
 
+<img src="https://raw.githubusercontent.com/xuehuayous/Android-WheelView/master/sample/pic/01.jpg" width="300" />
+
 ## 下载体验
 
 ## 引入
@@ -15,6 +17,7 @@
 **androidX**
 
 ```
+com.kevin:wheelview:0.0.1
 ```
 
 ## THANKS TO
