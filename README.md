@@ -17,7 +17,7 @@
 **androidX**
 
 ```
-com.kevin:wheelview:0.0.1
+com.kevin:wheelview:1.0.0
 ```
 
 ## THANKS TO
