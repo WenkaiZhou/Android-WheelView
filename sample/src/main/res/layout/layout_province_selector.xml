@@ -21,7 +21,7 @@
 
         <variable
             name="view"
-            type="com.kevin.wheelview.sample.province.ProvinceSelectorDialog" />
+            type="com.kevin.wheel.sample.province.ProvinceSelectorDialog" />
 
     </data>
 
@@ -80,7 +80,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_view" />
 
-        <com.kevin.wheelview.WheelView
+        <com.kevin.wheel.WheelView
             android:id="@+id/province_wheel_view"
             android:layout_width="0dp"
             android:layout_height="230dp"
@@ -101,7 +101,7 @@
             app:wv_textSize="20sp"
             app:wv_visibleItems="9" />
 
-        <com.kevin.wheelview.WheelView
+        <com.kevin.wheel.WheelView
             android:id="@+id/city_wheel_view"
             android:layout_width="0dp"
             android:layout_height="230dp"
@@ -121,7 +121,7 @@
             app:wv_textSize="20sp"
             app:wv_visibleItems="9" />
 
-        <com.kevin.wheelview.WheelView
+        <com.kevin.wheel.WheelView
             android:id="@+id/area_wheel_view"
             android:layout_width="0dp"
             android:layout_height="230dp"

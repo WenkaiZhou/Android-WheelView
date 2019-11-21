@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.kevin.wheelview.sample.clock
+package com.kevin.wheel.sample.clock
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.kevin.wheelview.WheelView
-import com.kevin.wheelview.sample.R
+import com.kevin.wheel.WheelView
+import com.kevin.wheel.sample.R
 import kotlinx.android.synthetic.main.activity_ios_clock.*
 import java.util.*
 

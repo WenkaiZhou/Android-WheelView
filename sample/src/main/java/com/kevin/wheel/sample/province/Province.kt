@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.kevin.wheelview.sample
-
-import org.junit.Test
-
-import org.junit.Assert.*
+package com.kevin.wheel.sample.province
 
 /**
- * Example local unit test, which will execute on the development machine (host).
+ * Province
  *
- * See [testing documentation](http://d.android.com/tools/testing).
+ * @author zhouwenkai@baidu.com, Created on 2019-11-15 19:38:48
+ *         Major Function：<b></b>
+ *         <p/>
+ *         Note: If you modify this class please fill in the following content as a record.
+ * @author mender，Modified Date Modify Content:
  */
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
-    }
-}
+data class Province(
+    val city: MutableList<City>,
+    val name: String
+)
+
+data class City(
+    val area: MutableList<String>,
+    val name: String
+)

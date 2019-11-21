@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.kevin.wheelview.sample
+package com.kevin.wheel.sample
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import com.kevin.wheelview.sample.clock.IOSClockActivity
-import com.kevin.wheelview.sample.province.ProvinceSelectorDialog
+import com.kevin.wheel.sample.clock.IOSClockActivity
+import com.kevin.wheel.sample.province.ProvinceSelectorDialog
 
 class MainActivity : AppCompatActivity() {
 

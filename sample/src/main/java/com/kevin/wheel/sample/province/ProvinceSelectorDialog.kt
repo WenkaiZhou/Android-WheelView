@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.kevin.wheelview.sample.province
+package com.kevin.wheel.sample.province
 
 import android.content.Context
 import android.graphics.Color
@@ -26,10 +26,10 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
 import com.kevin.dialog.BaseDialog
-import com.kevin.wheelview.sample.util.LocalFileUtils
+import com.kevin.wheel.sample.util.LocalFileUtils
 import com.google.gson.reflect.TypeToken
-import com.kevin.wheelview.WheelView
-import com.kevin.wheelview.sample.R
+import com.kevin.wheel.WheelView
+import com.kevin.wheel.sample.R
 
 /**
  * ProvinceSelectorDialog
@@ -101,7 +101,9 @@ class ProvinceSelectorDialog : BaseDialog() {
     fun show(
         activity: FragmentActivity
     ): ProvinceSelectorDialog {
-        super.show(activity.supportFragmentManager, TAG)
+        super.show(activity.supportFragmentManager,
+            TAG
+        )
         return this
     }
 

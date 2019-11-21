@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.kevin.wheelview
+package com.kevin.wheel
 
 import android.content.Context
 import android.content.res.Resources
@@ -2272,7 +2272,8 @@ open class WheelView @JvmOverloads constructor(
         if (this.curvedRefractRatio > 1f) {
             this.curvedRefractRatio = 1.0f
         } else if (this.curvedRefractRatio < 0f) {
-            this.curvedRefractRatio = DEFAULT_REFRACT_RATIO
+            this.curvedRefractRatio =
+                DEFAULT_REFRACT_RATIO
         }
         if (tempRefractRatio == this.curvedRefractRatio) {
             return
@@ -2431,13 +2432,17 @@ open class WheelView @JvmOverloads constructor(
 
     companion object {
 
-        private val DEFAULT_LINE_SPACING = dp2px(2f)
+        private val DEFAULT_LINE_SPACING =
+            dp2px(2f)
 
-        private val DEFAULT_TEXT_SIZE = sp2px(15f)
+        private val DEFAULT_TEXT_SIZE =
+            sp2px(15f)
 
-        private val DEFAULT_TEXT_BOUNDARY_MARGIN = dp2px(2f)
+        private val DEFAULT_TEXT_BOUNDARY_MARGIN =
+            dp2px(2f)
 
-        private val DEFAULT_DIVIDER_HEIGHT = dp2px(1f)
+        private val DEFAULT_DIVIDER_HEIGHT =
+            dp2px(1f)
 
         private const val DEFAULT_NORMAL_TEXT_COLOR = Color.DKGRAY
 
@@ -2532,11 +2537,7 @@ annotation class TextAlign
 /**
  * 左右圆弧效果方向注解
  */
-@IntDef(
-    WheelView.CURVED_ARC_DIRECTION_LEFT,
-    WheelView.CURVED_ARC_DIRECTION_CENTER,
-    WheelView.CURVED_ARC_DIRECTION_RIGHT
-)
+@IntDef(WheelView.CURVED_ARC_DIRECTION_LEFT, WheelView.CURVED_ARC_DIRECTION_CENTER, WheelView.CURVED_ARC_DIRECTION_RIGHT)
 @Retention(AnnotationRetention.SOURCE)
 annotation class CurvedArcDirection
 
