@@ -27,6 +27,9 @@ import android.graphics.Typeface
 import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Build
+import android.support.annotation.*
+import android.support.v4.content.ContextCompat
+import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
@@ -34,13 +37,6 @@ import android.view.VelocityTracker
 import android.view.View
 import android.view.ViewConfiguration
 import android.widget.OverScroller
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
-import androidx.annotation.FloatRange
-import androidx.annotation.RawRes
-import androidx.annotation.IntDef
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.cos
