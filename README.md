@@ -20,6 +20,12 @@
 com.kevin:wheelview:1.0.0
 ```
 
+**Support**
+
+```
+com.kevin:wheelview:1.0.1
+```
+
 ## THANKS TO
 
 [WheelView](https://github.com/Wiser-Wong/WheelView) 基于WheelView实现
