@@ -16,8 +16,8 @@
 package com.kevin.wheel.sample
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.kevin.wheel.sample.clock.IOSClockActivity
 import com.kevin.wheel.sample.province.ProvinceSelectorDialog
