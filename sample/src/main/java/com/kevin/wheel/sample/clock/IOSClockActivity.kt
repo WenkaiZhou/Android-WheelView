@@ -16,7 +16,7 @@
 package com.kevin.wheel.sample.clock
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.kevin.wheel.WheelView
 import com.kevin.wheel.sample.R
 import kotlinx.android.synthetic.main.activity_ios_clock.*
