@@ -261,6 +261,11 @@ open class WheelView @JvmOverloads constructor(
     private var dataItems: MutableList<Any> = mutableListOf()
 
     /**
+     * 不活跃的下标，选中时不变色
+     */
+    private var inactiveIndexes: MutableList<Int> = mutableListOf()
+
+    /**
      * 数据变化时，是否重置选中下标到第一个位置
      */
     private var isResetSelectedPosition = false
@@ -1027,7 +1032,7 @@ open class WheelView @JvmOverloads constructor(
 
         if (abs(item2CenterOffsetY) <= 0) {
             // 绘制选中的条目
-            paint.color = selectedItemTextColor
+            paint.color = if (isInactive(index)) textColor else selectedItemTextColor
             clipAndDraw2DText(
                 canvas,
                 text,
@@ -1038,7 +1043,7 @@ open class WheelView @JvmOverloads constructor(
             )
         } else if (item2CenterOffsetY > 0 && item2CenterOffsetY < this.itemHeight) {
             // 绘制与下边界交汇的条目
-            paint.color = selectedItemTextColor
+            paint.color = if (isInactive(index)) textColor else selectedItemTextColor
             clipAndDraw2DText(
                 canvas,
                 text,
@@ -1060,7 +1065,7 @@ open class WheelView @JvmOverloads constructor(
 
         } else if (item2CenterOffsetY < 0 && item2CenterOffsetY > -this.itemHeight) {
             // 绘制与上边界交汇的条目
-            paint.color = selectedItemTextColor
+            paint.color = if (isInactive(index)) textColor else selectedItemTextColor
             clipAndDraw2DText(
                 canvas,
                 text,
@@ -1226,7 +1231,7 @@ open class WheelView @JvmOverloads constructor(
             if (isAutoFitTextSize) remeasureTextSize(text) else centerToBaselineY
         if (abs(item2CenterOffsetY) <= 0) {
             // 绘制选中的条目
-            paint.color = selectedItemTextColor
+            paint.color = if (isInactive(index)) textColor else selectedItemTextColor
             paint.alpha = 255
             clipAndDraw3DText(
                 canvas,
@@ -1240,7 +1245,7 @@ open class WheelView @JvmOverloads constructor(
             )
         } else if (item2CenterOffsetY in 1 until itemHeight) {
             // 绘制与下边界交汇的条目
-            paint.color = selectedItemTextColor
+            paint.color = if (isInactive(index)) textColor else selectedItemTextColor
             paint.alpha = 255
             clipAndDraw3DText(
                 canvas,
@@ -1273,7 +1278,7 @@ open class WheelView @JvmOverloads constructor(
             paint.textSize = textSize
         } else if (item2CenterOffsetY < 0 && item2CenterOffsetY > -itemHeight) {
             // 绘制与上边界交汇的条目
-            paint.color = selectedItemTextColor
+            paint.color = if (isInactive(index)) textColor else selectedItemTextColor
             paint.alpha = 255
             clipAndDraw3DText(
                 canvas,
@@ -1456,6 +1461,32 @@ open class WheelView @JvmOverloads constructor(
                 ) else item.toString()
             is String -> item
             else -> item.toString()
+        }
+    }
+
+    /**
+     * 判断是否不活跃数据
+     *
+     * @param index 数据下标索引
+     * @return 是否不活跃数据
+     */
+    private fun isInactive(index: Int): Boolean {
+        val dataSize = dataItems.size
+        if (dataSize == 0) {
+            return false
+        }
+
+        if(inactiveIndexes.size == 0) {
+            return false
+        }
+        return if (isCyclic) {
+            var i = index % dataSize
+            if (i < 0) {
+                i += dataSize
+            }
+            i in inactiveIndexes
+        } else {
+            index in inactiveIndexes
         }
     }
 
@@ -1833,13 +1864,19 @@ open class WheelView @JvmOverloads constructor(
      * 设置数据
      *
      * @param dataItems 数据列表
+     * @param inactiveIndexes 不活跃的数据下标，选中时不变色；用于做不推荐选中
      */
-    fun setDataItems(dataItems: MutableList<*>?) {
+    @JvmOverloads
+    fun setDataItems(dataItems: MutableList<*>?, inactiveIndexes: MutableList<Int>? = null) {
         if (dataItems == null) {
             return
         }
         this.dataItems.clear()
         this.dataItems.addAll(dataItems.filterNotNull())
+        this.inactiveIndexes.clear()
+        inactiveIndexes?.let {
+            this.inactiveIndexes.addAll(it)
+        }
         if (!isResetSelectedPosition && this.dataItems.size > 0) {
             // 不重置选中下标
             if (selectedItemPosition >= this.dataItems.size) {
