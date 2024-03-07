@@ -22,7 +22,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.Rect
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.media.AudioManager
 import android.media.SoundPool
@@ -37,8 +39,8 @@ import android.widget.OverScroller
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.FloatRange
-import androidx.annotation.RawRes
 import androidx.annotation.IntDef
+import androidx.annotation.RawRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import java.util.Locale
@@ -158,9 +160,19 @@ open class WheelView @JvmOverloads constructor(
     private var isDrawSelectedRect: Boolean = false
 
     /**
-     * 选中区域颜色
+     * 选中区域背景颜色
      */
     private var selectedRectColor: Int = 0
+
+    /**
+     * 选中区域背景左侧圆角
+     */
+    private var selectedRectLeftRadius: Float = 0F
+
+    /**
+     * 选中区域背景右侧圆角
+     */
+    private var selectedRectRightRadius: Float = 0F
 
     /**
      * 文字起始X
@@ -351,22 +363,12 @@ open class WheelView @JvmOverloads constructor(
         textSize = ta.getDimension(R.styleable.WheelView_wv_textSize, DEFAULT_TEXT_SIZE)
         isAutoFitTextSize = ta.getBoolean(R.styleable.WheelView_wv_autoFitTextSize, false)
         textAlign = ta.getInt(R.styleable.WheelView_wv_textAlign, TEXT_ALIGN_CENTER)
-        textBoundaryMargin = ta.getDimension(
-            R.styleable.WheelView_wv_textBoundaryMargin,
-            DEFAULT_TEXT_BOUNDARY_MARGIN
-        )
-        textColor = ta.getColor(
-            R.styleable.WheelView_wv_normalItemTextColor,
-            DEFAULT_NORMAL_TEXT_COLOR
-        )
-        selectedItemTextColor = ta.getColor(
-            R.styleable.WheelView_wv_selectedItemTextColor,
-            DEFAULT_SELECTED_TEXT_COLOR
-        )
+        textBoundaryMargin = ta.getDimension(R.styleable.WheelView_wv_textBoundaryMargin, DEFAULT_TEXT_BOUNDARY_MARGIN)
+        textColor = ta.getColor(R.styleable.WheelView_wv_normalItemTextColor, DEFAULT_NORMAL_TEXT_COLOR)
+        selectedItemTextColor = ta.getColor(R.styleable.WheelView_wv_selectedItemTextColor, DEFAULT_SELECTED_TEXT_COLOR)
         lineSpacing = ta.getDimension(R.styleable.WheelView_wv_lineSpacing, DEFAULT_LINE_SPACING)
         isIntegerNeedFormat = ta.getBoolean(R.styleable.WheelView_wv_integerNeedFormat, false)
-        integerFormat =
-            ta.getString(R.styleable.WheelView_wv_integerFormat) ?: DEFAULT_INTEGER_FORMAT
+        integerFormat = ta.getString(R.styleable.WheelView_wv_integerFormat) ?: DEFAULT_INTEGER_FORMAT
         visibleItems = ta.getInt(R.styleable.WheelView_wv_visibleItems, DEFAULT_VISIBLE_ITEM)
         // 跳转可见item为奇数
         visibleItems = adjustVisibleItems(visibleItems)
@@ -377,31 +379,21 @@ open class WheelView @JvmOverloads constructor(
 
         isShowDivider = ta.getBoolean(R.styleable.WheelView_wv_showDivider, false)
         dividerType = ta.getInt(R.styleable.WheelView_wv_dividerType, DIVIDER_TYPE_FILL)
-        dividerSize =
-            ta.getDimension(R.styleable.WheelView_wv_dividerHeight, DEFAULT_DIVIDER_HEIGHT)
-        dividerColor =
-            ta.getColor(R.styleable.WheelView_wv_dividerColor, DEFAULT_SELECTED_TEXT_COLOR)
-        this.dividerPaddingForWrap = ta.getDimension(
-            R.styleable.WheelView_wv_dividerPaddingForWrap,
-            DEFAULT_TEXT_BOUNDARY_MARGIN
-        )
+        dividerSize = ta.getDimension(R.styleable.WheelView_wv_dividerHeight, DEFAULT_DIVIDER_HEIGHT)
+        dividerColor = ta.getColor(R.styleable.WheelView_wv_dividerColor, DEFAULT_SELECTED_TEXT_COLOR)
+        this.dividerPaddingForWrap = ta.getDimension(R.styleable.WheelView_wv_dividerPaddingForWrap, DEFAULT_TEXT_BOUNDARY_MARGIN)
 
         isDrawSelectedRect = ta.getBoolean(R.styleable.WheelView_wv_drawSelectedRect, false)
-        selectedRectColor =
-            ta.getColor(R.styleable.WheelView_wv_selectedRectColor, Color.TRANSPARENT)
+        selectedRectColor = ta.getColor(R.styleable.WheelView_wv_selectedRectColor, Color.TRANSPARENT)
+        val selectedRectRadius = ta.getDimension(R.styleable.WheelView_wv_selectedRectRadius, 0F)
+        selectedRectLeftRadius = ta.getDimension(R.styleable.WheelView_wv_selectedRectLeftRadius, selectedRectRadius)
+        selectedRectRightRadius = ta.getDimension(R.styleable.WheelView_wv_selectedRectRightRadius, selectedRectRadius)
 
         isCurved = ta.getBoolean(R.styleable.WheelView_wv_curved, true)
-        curvedArcDirection = ta.getInt(
-            R.styleable.WheelView_wv_curvedArcDirection,
-            CURVED_ARC_DIRECTION_CENTER
-        )
-        curvedArcDirectionFactor = ta.getFloat(
-            R.styleable.WheelView_wv_curvedArcDirectionFactor,
-            DEFAULT_CURVED_FACTOR
-        )
+        curvedArcDirection = ta.getInt(R.styleable.WheelView_wv_curvedArcDirection, CURVED_ARC_DIRECTION_CENTER)
+        curvedArcDirectionFactor = ta.getFloat(R.styleable.WheelView_wv_curvedArcDirectionFactor, DEFAULT_CURVED_FACTOR)
         // 折射偏移默认值
-        curvedRefractRatio =
-            ta.getFloat(R.styleable.WheelView_wv_curvedRefractRatio, DEFAULT_REFRACT_RATIO)
+        curvedRefractRatio = ta.getFloat(R.styleable.WheelView_wv_curvedRefractRatio, DEFAULT_REFRACT_RATIO)
         if (curvedRefractRatio > 1f) {
             curvedRefractRatio = 1.0f
         } else if (curvedRefractRatio < 0f) {
@@ -906,16 +898,57 @@ open class WheelView @JvmOverloads constructor(
      * @param canvas 画布
      */
     private fun drawSelectedRect(canvas: Canvas) {
-        if (isDrawSelectedRect) {
-            paint.color = selectedRectColor
-            canvas.drawRect(
-                clipLeft.toFloat(),
-                selectedItemTopLimit.toFloat(),
-                clipRight.toFloat(),
-                selectedItemBottomLimit.toFloat(),
-                paint
-            )
+        if (!isDrawSelectedRect) {
+            return
         }
+
+        paint.color = selectedRectColor
+
+        val path = Path()
+        path.moveTo(clipLeft + selectedRectLeftRadius, selectedItemTopLimit.toFloat())
+        // 上边
+        path.lineTo(clipRight - selectedRectLeftRadius, selectedItemTopLimit.toFloat())
+        // 右上角
+        val rightTopCircleRect = RectF(
+            clipRight - selectedRectRightRadius * 2,
+            selectedItemTopLimit.toFloat(),
+            clipRight.toFloat(),
+            selectedItemTopLimit + selectedRectRightRadius * 2
+        )
+        path.arcTo(rightTopCircleRect, 270f, 90f)
+        // 右边
+        path.lineTo(clipRight.toFloat(), selectedItemBottomLimit - selectedRectRightRadius)
+        // 右下角
+        val rightBottomCircleRect = RectF(
+            clipRight - selectedRectRightRadius * 2,
+            selectedItemBottomLimit - selectedRectRightRadius * 2,
+            clipRight.toFloat(),
+            selectedItemBottomLimit.toFloat()
+        )
+        path.arcTo(rightBottomCircleRect, 0f, 90f)
+        // 下边
+        path.lineTo(clipLeft + selectedRectLeftRadius, selectedItemBottomLimit.toFloat())
+        // 左下角
+        val leftBottomCircleRect = RectF(
+            clipLeft.toFloat(),
+            selectedItemBottomLimit - selectedRectLeftRadius * 2,
+            clipLeft + selectedRectLeftRadius * 2,
+            selectedItemBottomLimit.toFloat()
+        )
+        path.arcTo(leftBottomCircleRect, 90f, 90f)
+        // 左边
+        path.lineTo(clipLeft.toFloat(), selectedItemTopLimit + selectedRectLeftRadius)
+        // 左上角
+        val leftTopCircleRect = RectF(
+            clipLeft.toFloat(),
+            selectedItemTopLimit.toFloat(),
+            clipLeft + selectedRectLeftRadius * 2,
+            selectedItemTopLimit + selectedRectLeftRadius * 2
+        )
+        path.arcTo(leftTopCircleRect, 180f, 90f)
+
+        path.close()
+        canvas.drawPath(path, paint)
     }
 
     /**
@@ -2170,6 +2203,51 @@ open class WheelView @JvmOverloads constructor(
     }
 
     /**
+     * 设置选中区域圆角
+     *
+     * @param selectedRectRadius 选中区域圆角
+     */
+    fun setSelectedRectRadius(selectedRectRadius: Float) {
+        this.selectedRectLeftRadius = selectedRectRadius
+        this.selectedRectRightRadius = selectedRectRadius
+        invalidate()
+    }
+
+    /**
+     * 获取选中区域左侧圆角
+     */
+    fun getSelectedRectLeftRadius(): Float {
+        return selectedRectLeftRadius
+    }
+
+    /**
+     * 设置选中区域左侧圆角
+     *
+     * @param selectedLeftRectRadius 选中区域左侧圆角
+     */
+    fun setSelectedRectLeftRadius(selectedLeftRectRadius: Float) {
+        this.selectedRectLeftRadius = selectedLeftRectRadius
+        invalidate()
+    }
+
+    /**
+     * 获取选中区域右侧圆角
+     */
+    fun getSelectedRectRightRadius(): Float {
+        return selectedRectRightRadius
+    }
+
+    /**
+     * 设置选中区域右侧圆角
+     *
+     * @param selectedRightRectRadius 选中区域右侧圆角
+     */
+    fun setSelectedRectRightRadius(selectedRightRectRadius: Float) {
+        this.selectedRectRightRadius = selectedRightRectRadius
+        invalidate()
+    }
+
+    /**
      * 获取是否是弯曲（3D）效果
      *
      * @return 是否是弯曲（3D）效果
@@ -2385,7 +2463,12 @@ open class WheelView @JvmOverloads constructor(
      */
     private class SoundHelper {
 
-        private val soundPool: SoundPool
+        private val soundPool: SoundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            SoundPool.Builder().build()
+        } else {
+            @Suppress("DEPRECATION")
+            SoundPool(1, AudioManager.STREAM_SYSTEM, 1)
+        }
 
         private var soundId: Int = 0
 
@@ -2393,15 +2476,6 @@ open class WheelView @JvmOverloads constructor(
          * 音频播放音量 range 0.0-1.0
          */
         var playVolume: Float = 0.toFloat()
-
-        init {
-            soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                SoundPool.Builder().build()
-            } else {
-                @Suppress("DEPRECATION")
-                SoundPool(1, AudioManager.STREAM_SYSTEM, 1)
-            }
-        }
 
         /**
          * 加载音频资源

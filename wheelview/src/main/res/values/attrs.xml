@@ -63,5 +63,9 @@
         <attr name="wv_drawSelectedRect" format="boolean" />
         <!--选中区域颜色-->
         <attr name="wv_selectedRectColor" format="color" />
+        <!--选中区域圆角-->
+        <attr name="wv_selectedRectRadius" format="reference|dimension"/>
+        <attr name="wv_selectedRectLeftRadius" format="reference|dimension"/>
+        <attr name="wv_selectedRectRightRadius" format="reference|dimension"/>
     </declare-styleable>
 </resources>
