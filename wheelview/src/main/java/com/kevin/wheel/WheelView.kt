@@ -30,6 +30,7 @@ import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.VelocityTracker
@@ -68,7 +69,7 @@ open class WheelView @JvmOverloads constructor(
     /**
      * 字体大小
      */
-    private var textSize: Float = 0.toFloat()
+    private var textSize: Float = 0F
 
     /**
      * 是否自动调整字体大小以显示完全
@@ -100,7 +101,7 @@ open class WheelView @JvmOverloads constructor(
     /**
      * 每个item之间的空间，行间距
      */
-    private var lineSpacing: Float = 0.toFloat()
+    private var lineSpacing: Float = 0F
 
     /**
      * 是否循环滚动
@@ -136,7 +137,7 @@ open class WheelView @JvmOverloads constructor(
     /**
      * 分割线高度
      */
-    private var dividerSize: Float = 0.toFloat()
+    private var dividerSize: Float = 0F
 
     /**
      * 分割线填充类型
@@ -215,7 +216,7 @@ open class WheelView @JvmOverloads constructor(
     /**
      * 字体外边距，目的是留有边距
      */
-    private var textBoundaryMargin: Float = 0.toFloat()
+    private var textBoundaryMargin: Float = 0F
 
     /**
      * 数据为Integer类型时，是否需要格式转换
@@ -248,12 +249,12 @@ open class WheelView @JvmOverloads constructor(
     /**
      * 弯曲（3D）效果左右圆弧偏移效果系数 0-1之间 越大越明显
      */
-    private var curvedArcDirectionFactor: Float = 0.toFloat()
+    private var curvedArcDirectionFactor: Float = 0F
 
     /**
      * 弯曲（3D）效果选中后折射的偏移 与字体大小的比值，1为不偏移 越小偏移越明显
      */
-    private var curvedRefractRatio: Float = 0.toFloat()
+    private var curvedRefractRatio: Float = 0F
 
     /**
      * 数据列表
@@ -301,7 +302,7 @@ open class WheelView @JvmOverloads constructor(
     /**
      * 手指最后触摸的位置
      */
-    private var lastTouchY: Float = 0.toFloat()
+    private var lastTouchY: Float = 0F
 
     /**
      * 手指按下时间，根据按下抬起时间差处理点击滚动
@@ -1767,17 +1768,20 @@ open class WheelView @JvmOverloads constructor(
      */
     private val currentPosition: Int
         get() {
-            val itemPosition = if (scrollOffsetY < 0) {
-                (scrollOffsetY - this.itemHeight / 2) / this.itemHeight
+            return if (dataItems.size == 0) {
+                0
             } else {
-                (scrollOffsetY + this.itemHeight / 2) / this.itemHeight
+                val itemPosition = if (scrollOffsetY < 0) {
+                    (scrollOffsetY - this.itemHeight / 2) / this.itemHeight
+                } else {
+                    (scrollOffsetY + this.itemHeight / 2) / this.itemHeight
+                }
+                var currentPosition = itemPosition % dataItems.size
+                if (currentPosition < 0) {
+                    currentPosition += dataItems.size
+                }
+                currentPosition
             }
-            var currentPosition = itemPosition % dataItems.size
-            if (currentPosition < 0) {
-                currentPosition += dataItems.size
-            }
-
-            return currentPosition
         }
 
     /**
@@ -1847,8 +1851,8 @@ open class WheelView @JvmOverloads constructor(
      *
      * @return 当前选中的item数据
      */
-    fun getSelectedItemData(): Any {
-        return getItemData(selectedItemPosition) ?: ""
+    fun getSelectedItemData(): Any? {
+        return getItemData(selectedItemPosition)
     }
 
     /**
