@@ -19,7 +19,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.kevin.wheel.WheelView
 import com.kevin.wheel.sample.R
-import kotlinx.android.synthetic.main.activity_ios_clock.*
 import java.util.*
 
 /**
@@ -33,10 +32,16 @@ import java.util.*
  */
 class IOSClockActivity : AppCompatActivity() {
 
+    private lateinit var noonWheelView: WheelView
+    private lateinit var hourWheelView: WheelView
+    private lateinit var minuteWheelView: WheelView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ios_clock)
-
+        noonWheelView = findViewById(R.id.noon_wheel_view)
+        hourWheelView = findViewById(R.id.hour_wheel_view)
+        minuteWheelView = findViewById(R.id.minute_wheel_view)
 
         val hour = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
         val minute = Calendar.getInstance()[Calendar.MINUTE]
@@ -44,32 +49,32 @@ class IOSClockActivity : AppCompatActivity() {
         // 是否上午
         var forenoon = hour / 12 == 0
 
-        noon_wheel_view.setDataItems(mutableListOf("上午", "下午"))
-        noon_wheel_view.setSelectedItemPosition(if (forenoon) 0 else 1)
-        hour_wheel_view.setDataItems((1..12).toMutableList())
-        hour_wheel_view.setSelectedItemPosition((hour % 12) - 1)
-        minute_wheel_view.setDataItems((1 until 60).toMutableList())
-        minute_wheel_view.setSelectedItemPosition(minute - 1)
+        noonWheelView.setDataItems(mutableListOf("上午", "下午"))
+        noonWheelView.setSelectedItemPosition(if (forenoon) 0 else 1)
+        hourWheelView.setDataItems((1..12).toMutableList())
+        hourWheelView.setSelectedItemPosition((hour % 12) - 1)
+        minuteWheelView.setDataItems((1 until 60).toMutableList())
+        minuteWheelView.setSelectedItemPosition(minute - 1)
 
 
         var lastSelectedHour = hour
 
         // 上下午滚轮选择监听
-        noon_wheel_view.setOnItemSelectedListener(object : WheelView.OnItemSelectedListener {
+        noonWheelView.setOnItemSelectedListener(object : WheelView.OnItemSelectedListener {
             override fun onItemSelected(wheelView: WheelView, data: Any, position: Int) {
                 forenoon = !forenoon
             }
         })
 
-        hour_wheel_view.setOnItemSelectedListener(object : WheelView.OnItemSelectedListener {
+        hourWheelView.setOnItemSelectedListener(object : WheelView.OnItemSelectedListener {
             override fun onItemSelected(wheelView: WheelView, data: Any, position: Int) {
                 val selectedHour = data as Int
                 if (lastSelectedHour == 12 && selectedHour == 1) {
                     forenoon = !forenoon
-                    noon_wheel_view.setSelectedItemPosition(if (forenoon) 0 else 1, true)
+                    noonWheelView.setSelectedItemPosition(if (forenoon) 0 else 1, true)
                 } else if (lastSelectedHour == 1 && selectedHour == 12) {
                     forenoon = !forenoon
-                    noon_wheel_view.setSelectedItemPosition(if (forenoon) 0 else 1, true)
+                    noonWheelView.setSelectedItemPosition(if (forenoon) 0 else 1, true)
                 }
                 lastSelectedHour = selectedHour
             }

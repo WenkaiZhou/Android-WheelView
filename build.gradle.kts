@@ -2,10 +2,6 @@
 
 buildscript {
     repositories {
-        maven {
-            isAllowInsecureProtocol = true
-            setUrl("http://maven.aliyun.com/nexus/content/groups/public/")
-        }
         google()
         mavenCentral()
     }
@@ -21,10 +17,6 @@ buildscript {
 
 allprojects {
     repositories {
-        maven {
-            isAllowInsecureProtocol = true
-            setUrl("http://maven.aliyun.com/nexus/content/groups/public/")
-        }
         google()
         mavenCentral()
     }

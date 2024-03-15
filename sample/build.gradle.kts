@@ -26,7 +26,6 @@ android {
 
     buildFeatures {
         dataBinding = true
-        viewBinding = true
     }
 }
 
@@ -40,7 +39,8 @@ dependencies {
     androidTestImplementation("androidx.test:runner:1.4.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
     implementation(project(":wheelview"))
-    implementation("com.kevin:basedialog:1.0.4")
+    implementation("com.zwenkai:basedialog:1.1.3")
+//    implementation("com.zwenkai:wheelview:1.0.2")
     implementation("com.google.code.gson:gson:2.8.5")
 
     implementation("androidx.recyclerview:recyclerview:1.0.0")

@@ -126,7 +126,7 @@ class ProvinceSelectorDialog : BaseDialog() {
             val dialog = ProvinceSelectorDialog()
             dialog.setGravity(Gravity.BOTTOM)
                 // 设置宽度为屏幕宽度
-                .setWidth(1f)
+                .setWidthRatio(1f)
                 // 设置黑色透明背景
                 .setDimEnabled(true)
                 .setBackgroundColor(Color.WHITE)
